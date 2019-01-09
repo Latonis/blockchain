@@ -1,29 +1,28 @@
 # Beginning of blockchain, initializes list
 blockchain = []
+open_transactions = []
 
 
 def get_last_node():
     return blockchain[-1]
 
 
-def add_node(transaction_amount, last_transaction=[1]):
-    blockchain.append([last_transaction, transaction_amount])
+def add_transaction(sender, recipient, amount=0.0):
+    transaction = {'sender': sender, 'recipient': recipient, 'amount': amount}
+    open_transactions.append(transaction)
 
 
-def get_input():
-    input_type = float(input("Please enter the transaction amount: "))
-    return input_type
+def mine_block():
+    pass
 
 
-amount = get_input()
-add_node(amount)
+def get_transaction_values():
+    user_in = input('Enter sender, recipient, and value: ').split()
+    return user_in
 
-amount = get_input()
-add_node(last_transaction=get_last_node(), transaction_amount=amount)
 
-amount = get_input()
-add_node(amount, get_last_node())
+received = get_transaction_values()
+add_transaction(received[0], received[1], received[2])
 
-for node in blockchain:
-    print('Outputting single block:')
-    print(node)
+for block in open_transactions:
+    print(block)
