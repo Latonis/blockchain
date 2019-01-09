@@ -10,3 +10,4 @@ Provides an easy walkthrough of the transaction and mining process for a blockch
 
 ## Other Sources:
 #### (Book) [Blockchain Revolution: How the Technology Behind Bitcoin Is Changing Money, Business, and the World](http://blockchain-revolution.com)
+#### (Book) [Mastering Blockchain: Distributed Ledger Technology, Decentralization, and Smart Contracts Explained, 2nd    Edition](https://books.google.com/books/about/Mastering_Blockchain.html?id=3ZlUDwAAQBAJ)
