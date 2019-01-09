@@ -1,3 +1,4 @@
+# Beginning of blockchain, initializes list
 blockchain = []
 
 
@@ -9,9 +10,20 @@ def add_node(transaction_amount, last_transaction=[1]):
     blockchain.append([last_transaction, transaction_amount])
 
 
-tx_total = float(input("Please enter the transaction amount: "))
-add_node(2)
-add_node(last_transaction=get_last_node(), transaction_amount=0)
-add_node(10.8, get_last_node())
+def get_input():
+    input_type = float(input("Please enter the transaction amount: "))
+    return input_type
 
-print(blockchain)
+
+amount = get_input()
+add_node(amount)
+
+amount = get_input()
+add_node(last_transaction=get_last_node(), transaction_amount=amount)
+
+amount = get_input()
+add_node(amount, get_last_node())
+
+for node in blockchain:
+    print('Outputting single block:')
+    print(node)
