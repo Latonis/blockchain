@@ -32,12 +32,8 @@ def add_transaction(sender, recipient, amount=0.0):
 # Research an algo for how blocks are mined
 def mine_block():
     last_block = blockchain[-1]
-    space_separated_keys = ''
-    for keys in last_block:
-        space_separated_keys += str(last_block[keys]) + '-'
-
-    # Removes last char from string, as there's an extra dash
-    space_separated_keys = space_separated_keys[:-1]
+    # Super simple hash algorithm for verification
+    space_separated_keys = get_hash(last_block)
     current_block = {'previous hash': space_separated_keys,
                      'index': len(blockchain),
                      'transactions': open_transactions}
@@ -54,6 +50,36 @@ def get_transaction_values():
     return user_in
 
 
+# Very simple hash generation
+#     1. Get all key/value pairs in dictionary
+#     2. Separate them by a dash ('-')
+#     3. Remove the extra dash at the end due to for loop
+#     4. Return the calculated, but simple, hash
+def get_hash(to_be_hashed):
+    space_separated_keys = ''
+    for keys in to_be_hashed:
+        space_separated_keys += str(to_be_hashed[keys]) + '-'
+    return space_separated_keys[:-1]
+
+
+# Very simple verification method for previous blocks
+#     1. Get 'previous hash' key/value from current block
+#     2. Calculate actual hash from previous block
+#     3. Compare the hashes
+#     4. Successful or not <>?
+def verify_block():
+    i = 0
+    for block in blockchain:
+        if block == blockchain[0]:
+            if block['previous hash'] != 'none':
+                print('invalid block')
+        else:
+            if block['previous hash'] != get_hash(blockchain[i - 1]):
+                print('invalid block')
+        i += 1
+    print('block verified successfully!')
+
+
 # Get user input for now and add it
 received = get_transaction_values()
 add_transaction(received[0], received[1], float(received[2]))
@@ -63,7 +89,9 @@ add_transaction(received[0], received[1], float(received[2]))
 # Printing debugs for testing format of transactions
 for block in open_transactions:
     mine_block()
+
 # Printing entire blockchain
 for node in blockchain:
     for nodes in node:
         print(node[nodes])
+    verify_block()
