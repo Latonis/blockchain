@@ -1,3 +1,5 @@
+import csv
+
 # Beginning of blockchain
 # Genesis block is placeholder for beginning of chain, holds proof of action
 genesis = {'previous hash': 'none',
@@ -6,7 +8,6 @@ genesis = {'previous hash': 'none',
 blockchain = [genesis]
 # List of open transactions
 open_transactions = []
-owner = 'Owner'
 
 
 # Returns the last known block in the blockchain
@@ -20,13 +21,16 @@ def get_last_node():
 
 
 # Adds a transaction with the following parameters:
-#     sender: the address who initated the transaction
-#     recipient: the address who recieved the transaction
+#     sender: the address who initiated the transaction
+#     recipient: the address who received the transaction
 #     amount: amount send in the transaction
 # end
 def add_transaction(sender, recipient, amount=0.0):
     transaction = {'sender': sender, 'recipient': recipient, 'amount': amount}
     open_transactions.append(transaction)
+
+    if len(open_transactions) > 9:
+        mine_block()
 
 
 # Research an algo for how blocks are mined
@@ -37,11 +41,7 @@ def mine_block():
     current_block = {'previous hash': space_separated_keys,
                      'index': len(blockchain),
                      'transactions': open_transactions}
-
     blockchain.append(current_block)
-
-    for node in current_block:
-        print(current_block[node])
 
 
 # Returns the allotted information given by the user
@@ -59,6 +59,7 @@ def get_hash(to_be_hashed):
     space_separated_keys = ''
     for keys in to_be_hashed:
         space_separated_keys += str(to_be_hashed[keys]) + '-'
+
     return space_separated_keys[:-1]
 
 
@@ -69,29 +70,45 @@ def get_hash(to_be_hashed):
 #     4. Successful or not <>?
 def verify_block():
     i = 0
-    for block in blockchain:
-        if block == blockchain[0]:
-            if block['previous hash'] != 'none':
+    for current_block in blockchain:
+        if current_block == blockchain[0]:
+            if current_block['previous hash'] != 'none':
                 print('invalid block')
         else:
-            if block['previous hash'] != get_hash(blockchain[i - 1]):
+            if current_block['previous hash'] != get_hash(blockchain[i - 1]):
                 print('invalid block')
         i += 1
     print('block verified successfully!')
+
+
+# Write data in the blockchain to a csv file
+#     1. Prints each block in chain
+#     2. Prints with headers, respectively: previous_hash, index, open_transactions
+def write_to_csv():
+    keys = blockchain[0].keys()
+    with open('data.csv', 'w', newline='') as output:
+        writer = csv.DictWriter(output, keys)
+        writer.writeheader()
+        writer.writerows(blockchain)
 
 
 # Get user input for now and add it
 received = get_transaction_values()
 add_transaction(received[0], received[1], float(received[2]))
 received = get_transaction_values()
+mine_block()
 add_transaction(received[0], received[1], float(received[2]))
+mine_block()
 
 # Printing debugs for testing format of transactions
-for block in open_transactions:
-    mine_block()
 
 # Printing entire blockchain
 for node in blockchain:
+    counter = 0
     for nodes in node:
         print(node[nodes])
+    print(blockchain[counter])
+    counter += 1
     verify_block()
+
+write_to_csv()
